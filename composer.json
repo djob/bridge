@@ -16,8 +16,8 @@
         "php": ">=5.3.1"
     },
     "autoload": {
-      "psr-4" : {
-        "Djob\\Bridge" : "src/"
+      "psr-0" : {
+        "Djob\\Bridge\\" : "src/"
       }
     },
     "repositories": [
