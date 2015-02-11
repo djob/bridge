@@ -1,0 +1,30 @@
+{
+    "name": "djob/bridge",
+    "minimum-stability": "dev",
+    "description": "PHP 2 Frontend - Assets and UI Components",
+    "keywords": ["assets", "UI", "frontend"],
+    "homepage": "url.com",
+    "type": "library",
+    "licence": "MIT",
+    "authors": [
+        {
+            "name": "Danijel Job",
+            "email": "danijel.job@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.1"
+    },
+    "autoload": {
+      "psr-4" : {
+        "Djob\\Bridge" : "src/"
+      }
+    },
+    "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://bitbucket.org/djob/bridge.git"
+      }
+    ]
+
+}
