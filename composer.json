@@ -3,7 +3,7 @@
     "minimum-stability": "dev",
     "description": "PHP 2 Frontend - Assets and UI Components",
     "keywords": ["assets", "UI", "frontend"],
-    "homepage": "url.com",
+    "homepage": "http://danijeljob.iz.hr",
     "type": "library",
     "licence": "MIT",
     "authors": [
@@ -13,12 +13,14 @@
         }
     ],
     "require": {
-        "php": ">=5.3.1"
+        "php": ">=5.3.1",
+        "kriswallsmith/assetic": "~1.2.1"
     },
     "autoload": {
       "psr-4" : {
         "Djob\\Bridge\\" : "src/"
-      }
+      },
+      "files": [ "src/functions.php" ]
     },
     "repositories": [
       {

@@ -14,11 +14,11 @@ class Table extends ElementAbstract
 	protected $header  = [];
 	protected $footer  = [];
 
-	public function __construct(array $body, array $header = [], array $footer = [])
+	public function __construct(array $body = [], array $header = [], array $footer = [])
 	{
-		$this->body   = $body;
-		$this->header = $header;
-		$this->footer = $footer;
+		$this->body($body);
+		$this->header($header);
+		$this->footer($footer);
 	}
 
 	public function header(array $header = [])
@@ -42,9 +42,23 @@ class Table extends ElementAbstract
 	public function body(array $body = [])
 	{
 		if ($body && is_array($body)) {
-			$body = new Element('tbody', array(), $body);
+			foreach ($body as &$tr) {
+				if (is_array($tr)) {
+
+					$tr = $this->normalize('tr', $tr);
+
+					foreach ((array) $tr['content'] as $key => &$td) {
+						$tr['content'][$key] = $this->normalize('td', $td);
+					}
+
+				} else {
+					throw new ElementException('Invalid body content provided for Table element. Row must be array of columns');
+				}
+			}
+
+			$body = $this->normalize('tbody', $body);
 		}
 
-		return $this->smartGetSet('body', $body);
+		return $this->body = $this->content($body);
 	}
 }

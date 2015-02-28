@@ -13,6 +13,8 @@ abstract class ElementAbstract implements ElementInterface
     protected $tagName    = null;
     protected $attributes = [];
 
+	protected $builder = null;
+
     protected final function smartGetSet($attribute, $value)
     {
         if (!empty($value)) {
@@ -21,6 +23,35 @@ abstract class ElementAbstract implements ElementInterface
 
         return $this->{$attribute};
     }
+
+	public function getBuilder()
+	{
+		if (!$this->builder) {
+			$this->builder = new Builder();
+		}
+
+		return $this->builder;
+	}
+
+	protected function normalize($tag, $element, array $attributes = []) {
+		if (is_array($element)) {
+			if (!isset($element['content'])) {
+				$element = [
+					'tag' => $tag,
+					'content' => $element,
+					'attributes' => $attributes
+				];
+			}
+
+			return $element;
+		} else {
+			return [
+				'tag' => $tag,
+				'content' => $element,
+				'attributes' => $attributes
+			];
+		}
+	}
 
     /**
      * Set or get content of element
@@ -94,8 +125,7 @@ abstract class ElementAbstract implements ElementInterface
      */
     public function render()
     {
-        $renderer = new Renderer($this);
-        return $renderer->render();
+        return $this->getBuilder()->build($this);
     }
 
 }
