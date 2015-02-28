@@ -18,7 +18,7 @@
     },
     "autoload": {
       "psr-4" : {
-        "Djob\\Bridge\\" : "src/"
+        "Bridge\\" : "src/"
       },
       "files": [ "src/functions.php" ]
     },

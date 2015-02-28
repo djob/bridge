@@ -5,7 +5,7 @@
  * Date: 11.02.15.
  * Time: 10:13
  */
-namespace Djob\Bridge\Html;
+namespace Bridge\Html;
 
 abstract class ElementAbstract implements ElementInterface
 {

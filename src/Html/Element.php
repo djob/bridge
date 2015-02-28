@@ -5,7 +5,7 @@
  * Date: 11.02.15.
  * Time: 12:31
  */
-namespace Djob\Bridge\Html;
+namespace Bridge\Html;
 
 use ReflectionClass;
 
