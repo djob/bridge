@@ -72,10 +72,9 @@ class Builder {
 					$html .= $this->tag($child);
 				}
 			}
-
 		} elseif (is_scalar($content)) {
 			$html .= $content;
-		} elseif ($content instanceof ElementAbstract) {
+		} elseif ($content instanceof TagAbstract) {
 			$html .= $content;
 		}
 
@@ -84,7 +83,7 @@ class Builder {
 
 	public function build($element)
 	{
-		if ($element instanceof ElementAbstract) {
+		if ($element instanceof TagAbstract) {
 			$element = $element->toArray();
 		} elseif (!is_array($element)) {
 			throw new ElementException('Cannot build html string. Invalid argument provided.');

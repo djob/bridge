@@ -108,13 +108,13 @@ class BuilderOld
 	{
 		$this->setElement($element);
 
-		// Check if tagName is set
-		if (empty($tagName = $this->getElement()->tagName())) {
-			throw new ElementException('Failed to render HTML Element. Empty tagName');
+		// Check if name is set
+		if (empty($name = $this->getElement()->name())) {
+			throw new ElementException('Failed to render HTML Element. Empty name');
 		}
 
 		// Start to build html string
-		$html = '<' . $tagName;
+		$html = '<' . $name;
 
 		if (is_array($attributes = $this->getElement()->attributes()) && count($attributes)) {
 			$html .= ' ' . $this->buildAttributes($attributes);
@@ -124,7 +124,7 @@ class BuilderOld
 
 		// Append content if exists
 		if ($content = $this->buildContent()) {
-			$html .= $content . "</{$this->getElement()->tagName()}>";
+			$html .= $content . "</{$this->getElement()->name()}>";
 		} else {
 			$html .= '/>';
 		}

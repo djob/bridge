@@ -7,9 +7,9 @@
  */
 namespace Bridge\Html;
 
-class Table extends ElementAbstract
+class Table extends TagAbstract
 {
-	protected $tagName = 'table';
+	protected $name = 'table';
 	protected $body    = [];
 	protected $header  = [];
 	protected $footer  = [];

@@ -9,16 +9,21 @@ namespace Bridge\Html;
 
 use ReflectionClass;
 
-class Element extends ElementAbstract
+class Tag extends TagAbstract
 {
-	public function __construct($tagName, $attributes = [], $content = null)
+	public function __construct($name, $content = null, $attributes = [])
 	{
 
+		$this->name($name);
+		$this->content($content);
+		$this->attributes($attributes);
+
+		return $this;
 	}
 
 	public function __call($name, $arguments)
 	{
-		$instance = new ReflectionClass('\Djob\Bridge\Html\Element');
+		$instance = new ReflectionClass('Tag');
 		array_unshift($arguments, $name);
 		return $instance->newInstanceArgs($arguments);
 	}

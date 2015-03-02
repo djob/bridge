@@ -8,5 +8,8 @@
 namespace Bridge;
 
 class Bridge {
+	public function __construct()
+	{
 
+	}
 }
