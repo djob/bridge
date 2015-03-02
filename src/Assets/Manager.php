@@ -8,17 +8,17 @@
 
 namespace Bridge\Assets;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
-use Assetic\Asset\GlobAsset;
+
 
 class Manager {
 
 	protected $adapter = null;
+	protected $cssCollection = array();
+	protected $jsCollection = array();
 
-	public function __construct()
+	public function __construct($adapter)
 	{
-		$this->collection = new AssetCollection();
+		$this->adapter = $adapter;
 	}
 
 }

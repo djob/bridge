@@ -97,24 +97,19 @@ abstract class ElementAbstract implements ElementInterface
         $this->contentToArray();
 
         if (is_array($content)) {
-            foreach ($content as $item) {
-                $this->content[] = $item;
-            }
+	        if (isset($content['tag'])) {
+		        $this->content[] = $content;
+	        } else {
+		        foreach ($content as $cnt) {
+			        $this->appendContent($cnt);
+		        }
+	        }
+
         } else {
             $this->content[] = $content;
         }
 
         return $this->content;
-    }
-
-    /**
-     * Alias of self::render()
-     *
-     * @return string
-     * */
-    public function __toString()
-    {
-        return $this->render();
     }
 
     /**
@@ -127,5 +122,39 @@ abstract class ElementAbstract implements ElementInterface
     {
         return $this->getBuilder()->build($this);
     }
+
+	/**
+	 * Alias of self::render()
+	 *
+	 * @return string
+	 * */
+	public function toArray()
+	{
+		$array = [
+			'tag' => $this->tagName(),
+			'attributes' => $this->attributes(),
+			'content' => $this->content()
+		];
+
+		if (is_array($array['content'])) {
+			foreach ($array['content'] as &$child) {
+				if ($child instanceof ElementAbstract) {
+					$child = $child->toArray();
+				}
+			}
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Alias of self::render()
+	 *
+	 * @return string
+	 * */
+	public function __toString()
+	{
+		return $this->render();
+	}
 
 }

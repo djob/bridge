@@ -24,19 +24,39 @@ class Table extends ElementAbstract
 	public function header(array $header = [])
 	{
 		if ($header && is_array($header)) {
-			$header = new Element('thead', array(), $header);
-		}
 
-		return $this->smartGetSet('header', $header);
+			$tr = $this->normalize('tr', $header);
+
+			foreach ($tr['content'] as $key => $td) {
+				$tr['content'][$key] = $this->normalize('th', $td);
+			}
+
+			$header = [
+				'tag'     => 'thead',
+				'content' => $tr
+			];
+
+			$this->appendContent($header);
+
+			return $this->header = $header;
+		}
 	}
 
 	public function footer(array $footer = [])
 	{
 		if ($footer && is_array($footer)) {
-			$footer = new Element('tfoot', array(), $footer);
-		}
 
-		return $this->smartGetSet('footer', $footer);
+			$tr = $this->normalize('tr', $footer);
+
+			foreach ($tr['content'] as $key => $td) {
+				$tr['content'][$key] = $this->normalize('td', $td);
+			}
+
+			$footer = $this->normalize('tfoot', $tr);
+
+			$this->appendContent($footer);
+			return $this->footer = $footer;
+		}
 	}
 
 	public function body(array $body = [])
@@ -57,8 +77,9 @@ class Table extends ElementAbstract
 			}
 
 			$body = $this->normalize('tbody', $body);
-		}
+			$this->appendContent($body);
 
-		return $this->body = $this->content($body);
+			return $this->body = $body;
+		}
 	}
 }
