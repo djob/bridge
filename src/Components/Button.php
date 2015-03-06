@@ -10,19 +10,10 @@ namespace Bridge\Components;
 
 use Bridge\Html\Tag;
 
-class Button extends ComponentAbstract{
-
-	public function init()
+class Button extends ComponentAbstract
+{
+	public function init($content = null, $attributes = [])
 	{
-
-	}
-
-	public function render()
-	{
-		$element = new Tag('button', 'CLick ME', array(
-			'class' => 'btn btn-primary'
-		));
-
-		return $element->render();
+		$this->element = new Tag('button', $content, $attributes);
 	}
 }

@@ -6,9 +6,15 @@
  * Time: 20:09
  */
 
-namespace Bridge;
+namespace Bridge\Skins;
 
 
-abstract class SkinAbstract {
+abstract class SkinAbstract implements SkinInterface
+{
+	protected $name = null;
 
+    public function getName()
+    {
+        return $this->name;
+    }
 }

@@ -10,11 +10,8 @@ namespace Bridge;
 use Bridge\Assets\Manager;
 use Bridge\Assets\Adapter as AssetsAdapter;
 
-class Assets {
-
-
-
-
+class Assets
+{
 	public function __construct()
 	{
 		$this->manager = new Manager(new AssetsAdapter);

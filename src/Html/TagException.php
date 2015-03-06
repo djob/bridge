@@ -9,7 +9,7 @@ namespace Bridge\Html;
 
 use Exception;
 
-class ElementException extends  Exception
+class TagException extends  Exception
 {
 
 }

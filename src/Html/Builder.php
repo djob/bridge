@@ -15,6 +15,12 @@ class Builder {
 
 	}
 
+	/**
+	 * Build tag string
+	 *
+	 * @param array $element
+	 * @return string
+	 */
 	public function tag(array $element)
 	{
 		$html = '<' . $element['tag'];
@@ -32,13 +38,25 @@ class Builder {
 		return $html;
 	}
 
+
+	/**
+	 * Build attributes string
+	 *
+	 * @param array $attributes
+	 * @return string
+	 */
 	public function attributes(array $attributes)
 	{
 		$html = '';
 
 		if (count($attributes)) {
 			foreach ($attributes as $key => $val) {
-				$html .= ' ' . $key . '=' . $val;
+                $html .= " {$key}=\"";
+                if (is_array($val)) {
+                    $html .= implode(' ', $val) . '"';
+                } else {
+                    $html .= $val . '"';
+                }
 			}
 		}
 
@@ -46,18 +64,9 @@ class Builder {
 	}
 
 	/**
-	 * @param array $content [
-	 *      'tag' => 'tagnamae'
-	 *   ...
-	 * ]
-	 * array $content = [
-	 *      [
-	 *         'tag' => 'tagname',
-	 *      ],
-	 *      []
-	 *      ...
-	 * ]
-	 * string $content
+	 * Build content string
+	 *
+	 * @param mixed $content
 	 * @return string
 	 */
 	public function content($content)
@@ -72,21 +81,30 @@ class Builder {
 					$html .= $this->tag($child);
 				}
 			}
-		} elseif (is_scalar($content)) {
+		} elseif (is_scalar($content) || $content instanceof TagAbstract) {
 			$html .= $content;
-		} elseif ($content instanceof TagAbstract) {
-			$html .= $content;
+		} else {
+			return null;
+			#throw new TagException('Cannot build html string. Invalid content provided.');
 		}
 
 		return $html;
 	}
 
+
+	/**
+	 * Build complete tag string
+	 *
+	 * @param $element
+	 * @return null|string
+	 */
 	public function build($element)
 	{
 		if ($element instanceof TagAbstract) {
 			$element = $element->toArray();
 		} elseif (!is_array($element)) {
-			throw new ElementException('Cannot build html string. Invalid argument provided.');
+			return null;
+			#throw new TagException('Cannot build html string. Invalid argument provided.');
 		}
 
 		return $this->tag($element);

@@ -9,6 +9,16 @@ namespace Bridge\Html;
 
 abstract class TagAbstract
 {
+	// Table tags constants
+	const TAG_TBODY = 'tbody';
+	const TAG_THEAD = 'thead';
+	const TAG_TFOOT = 'tfoot';
+	const TAG_TR    = 'tr';
+	const TAG_TD    = 'td';
+	const TAG_TH    = 'th';
+	// Interaction tags constants
+	const TAG_BUTTON = 'button';
+
     protected $content    = null;
     protected $name    = null;
     protected $attributes = [];
@@ -67,6 +77,72 @@ abstract class TagAbstract
     public function attributes(array $attributes = [])
     {
         return $this->smartGetSet('attributes', $attributes);
+    }
+
+
+    public function removeAttribute($attribute, $value = null)
+    {
+        if (isset($this->attributes[$attribute])) {
+            if ($value) {
+                if (is_string($this->attributes[$attribute]) && !empty($this->attributes[$attribute])) {
+                    if (is_string($value)) {
+                        $this->attributes[$attribute] = str_replace($value, '', $this->attributes[$attribute]);
+                    } elseif (is_array($value)) {
+                        foreach ($value as $val) {
+                            $this->attributes[$attribute] = str_replace($val, '', $this->attributes[$attribute]);
+                        }
+                    }
+                } elseif (is_array($this->attributes[$attribute]) && count($this->attributes[$attribute])) {
+                    if (is_string($value)) {
+                        if ($index = array_search($value, $this->attributes[$attribute])) {
+                            unset($this->attributes[$attribute][$index]);
+                        }
+                    } elseif (is_array($value)) {
+                        foreach ($value as $val) {
+                            if ($index = array_search($val, $this->attributes[$attribute])) {
+                                unset($this->attributes[$attribute][$index]);
+                            }
+                        }
+                    }
+                }
+               return $this->attributes[$attribute];
+            } else {
+                unset ($this->attributes[$attribute]);
+            }
+        }
+        return null;
+    }
+
+    public function appendAttribute($attribute, $value)
+    {
+        $this->checkAttribute($attribute);
+
+        if (!in_array($value, $this->attributes[$attribute])) {
+            $this->attributes[$attribute][] = $value;
+        }
+    }
+
+    public function setAttribute($attribute, $value)
+    {
+        $this->attributes[$attribute] = [$value];
+    }
+
+    public function getAttribute($attribute)
+    {
+        if (isset($this->attributes[$attribute])) {
+            return $this->attributes[$attribute];
+        }
+
+        return null;
+    }
+
+    protected function checkAttribute($attribute)
+    {
+        if (!isset($this->attributes[$attribute])) {
+            $this->attributes[$attribute] = [];
+        } elseif (!is_array($this->attributes[$attribute])) {
+            $this->attributes[$attribute] = [$this->attributes[$attribute]];
+        }
     }
 
     public function name($name = null)
