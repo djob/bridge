@@ -30,30 +30,28 @@ class Manager {
         }
     }
 
-    protected function addFile($type, $path, $priority = 1)
+    private function addToCollection($collection, $data, $priority)
     {
-        $collection = $type . 'Files';
-
-        if (is_string($path)) {
-            $this->append($collection, $path, $priority);
-        } elseif (is_array($path)) {
-            foreach ($path as $item) {
+        if (is_string($data)) {
+            $this->append($collection, $data, $priority);
+        } elseif (is_array($data)) {
+            foreach ($data as $item) {
                 $this->append($collection, $item, $priority);
             }
+        } else {
+            throw new \InvalidArgumentException(sprintf('Invalid argument provided (%s) to collection %s',
+                gettype($data), $collection));
         }
+    }
+
+    protected function addFile($type, $path, $priority = 1)
+    {
+        $this->addToCollection($type . 'Files', $type, $priority);
     }
 
     protected function addSource($type, $source, $priority = 1)
     {
-        $collection = $type . 'Sources';
-
-        if (is_string($source)) {
-            $this->append($collection, $source, $priority);
-        } elseif (is_array($source)) {
-            foreach ($source as $item) {
-                $this->append($collection, $item, $priority);
-            }
-        }
+        $this->addToCollection($type . 'Sources', $source, $priority);
     }
 
     public function addCssFile($path, $priority = 1)
@@ -73,7 +71,7 @@ class Manager {
 
     public function addCssSource($source, $priority = 1)
     {
-        $this->addSource('js', $source, $priority);
+        $this->addSource('css', $source, $priority);
     }
 
 }

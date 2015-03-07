@@ -18,6 +18,7 @@ class Bridge {
 	private static $instance = null;
     private $skin = null;
     private $assetManager = null;
+    private $libraryManager = null;
 
 	public function __construct(SkinAbstract $skin = null)
 	{
@@ -28,7 +29,26 @@ class Bridge {
 
         // Set asset manager
         $this->assetManager = new AssetsManager(new AssetsAdapter());
+        $this->libraryManager = new Libraries();
+
+        $this->initLibraries();
 	}
+
+    public static function path($path = null)
+    {
+        $basePath = dirname(__FILE__);
+
+        if ($path) {
+            $basePath .= '\\' . ltrim($path, '\/');
+        }
+
+        return $basePath;
+    }
+
+    protected function initLibraries()
+    {
+        $this->libraryManager->registerLibraries();
+    }
 
     public function assets()
     {

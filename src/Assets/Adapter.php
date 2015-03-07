@@ -18,7 +18,7 @@ class Adapter {
 
 	public function __construct()
 	{
-		$this->collection = new AssetCollection();
+		#$this->collection = new AssetCollection();
 	}
 
 }
