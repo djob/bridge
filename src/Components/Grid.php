@@ -8,6 +8,12 @@
 
 namespace Bridge\Components;
 
-class Grid extends ComponentAbstract{
+use Bridge\Html\Table;
 
+class Grid extends ComponentAbstract
+{
+    public function init($body = [], $header = [], $footer = [], $attributes = [])
+    {
+        $this->element = new Table($body, $header, $footer, $attributes);
+    }
 }

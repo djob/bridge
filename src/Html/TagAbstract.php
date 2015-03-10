@@ -9,23 +9,31 @@ namespace Bridge\Html;
 
 abstract class TagAbstract
 {
-	// Table tags constants
-	const TAG_TBODY = 'tbody';
-	const TAG_THEAD = 'thead';
-	const TAG_TFOOT = 'tfoot';
-	const TAG_TR    = 'tr';
-	const TAG_TD    = 'td';
-	const TAG_TH    = 'th';
-	// Interaction tags constants
-	const TAG_BUTTON = 'button';
+    // Table tags constants
+    const TAG_TABLE = 'table';
+    const TAG_TBODY = 'tbody';
+    const TAG_THEAD = 'thead';
+    const TAG_TFOOT = 'tfoot';
+    const TAG_TR    = 'tr';
+    const TAG_TD    = 'td';
+    const TAG_TH    = 'th';
+    // List tags
+    const TAG_LIST          = 'ul';
+    const TAG_LIST_ORDERED  = 'ol';
+    const TAG_LIST_ITEM     = 'li';
+    const TAG_LIST_DESC     = 'dl';
+    const TAG_LIST_DESC_KEY = 'dt';
+    const TAG_LIST_DESC_VAL = 'dt';
+    // Interaction tags constants
+    const TAG_BUTTON = 'button';
 
     protected $content    = null;
-    protected $name    = null;
+    protected $name       = null;
     protected $attributes = [];
 
-	protected $builder = null;
+    protected $builder = null;
 
-    protected final function smartGetSet($attribute, $value)
+    final protected function smartGetSet($attribute, $value)
     {
         if (!empty($value)) {
             $this->{$attribute} = $value;
@@ -34,34 +42,35 @@ abstract class TagAbstract
         return $this->{$attribute};
     }
 
-	public function getBuilder()
-	{
-		if (!$this->builder) {
-			$this->builder = new Builder();
-		}
+    public function getBuilder()
+    {
+        if (!$this->builder) {
+            $this->builder = new Builder();
+        }
 
-		return $this->builder;
-	}
+        return $this->builder;
+    }
 
-	protected function normalize($tag, $element, array $attributes = []) {
-		if (is_array($element)) {
-			if (!isset($element['content'])) {
-				$element = [
-					'tag' => $tag,
-					'content' => $element,
-					'attributes' => $attributes
-				];
-			}
+    protected function normalize($tag, $element, array $attributes = [])
+    {
+        if (is_array($element)) {
+            if (!isset($element['content'])) {
+                $element = [
+                    'tag'        => $tag,
+                    'content'    => $element,
+                    'attributes' => $attributes
+                ];
+            }
 
-			return $element;
-		} else {
-			return [
-				'tag' => $tag,
-				'content' => $element,
-				'attributes' => $attributes
-			];
-		}
-	}
+            return $element;
+        } else {
+            return [
+                'tag'        => $tag,
+                'content'    => $element,
+                'attributes' => $attributes
+            ];
+        }
+    }
 
     /**
      * Set or get content of element
@@ -105,11 +114,13 @@ abstract class TagAbstract
                         }
                     }
                 }
-               return $this->attributes[$attribute];
+
+                return $this->attributes[$attribute];
             } else {
                 unset ($this->attributes[$attribute]);
             }
         }
+
         return null;
     }
 
@@ -173,13 +184,13 @@ abstract class TagAbstract
         $this->contentToArray();
 
         if (is_array($content)) {
-	        if (isset($content['tag'])) {
-		        $this->content[] = $content;
-	        } else {
-		        foreach ($content as $cnt) {
-			        $this->appendContent($cnt);
-		        }
-	        }
+            if (isset($content['tag'])) {
+                $this->content[] = $content;
+            } else {
+                foreach ($content as $cnt) {
+                    $this->appendContent($cnt);
+                }
+            }
 
         } else {
             $this->content[] = $content;
@@ -199,38 +210,38 @@ abstract class TagAbstract
         return $this->getBuilder()->build($this);
     }
 
-	/**
-	 * Alias of self::render()
-	 *
-	 * @return string
-	 * */
-	public function toArray()
-	{
-		$array = [
-			'tag' => $this->name(),
-			'attributes' => $this->attributes(),
-			'content' => $this->content()
-		];
+    /**
+     * Alias of self::render()
+     *
+     * @return string
+     * */
+    public function toArray()
+    {
+        $array = [
+            'tag'        => $this->name(),
+            'attributes' => $this->attributes(),
+            'content'    => $this->content()
+        ];
 
-		if (is_array($array['content'])) {
-			foreach ($array['content'] as &$child) {
-				if ($child instanceof TagAbstract) {
-					$child = $child->toArray();
-				}
-			}
-		}
+        if (is_array($array['content'])) {
+            foreach ($array['content'] as &$child) {
+                if ($child instanceof TagAbstract) {
+                    $child = $child->toArray();
+                }
+            }
+        }
 
-		return $array;
-	}
+        return $array;
+    }
 
-	/**
-	 * Alias of self::render()
-	 *
-	 * @return string
-	 * */
-	public function __toString()
-	{
-		return $this->render();
-	}
+    /**
+     * Alias of self::render()
+     *
+     * @return string
+     * */
+    public function __toString()
+    {
+        return $this->render();
+    }
 
 }

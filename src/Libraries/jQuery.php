@@ -8,8 +8,8 @@
 
 namespace Bridge\Libraries;
 
-
-class jQuery extends LibraryAbstract{
+class Jquery extends LibraryAbstract
+{
     protected $name = 'jquery';
     protected $version = '2.1.1';
     protected $js = [

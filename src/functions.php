@@ -7,8 +7,15 @@
  */
 
 if (! function_exists('bridge')) {
-	function bridge()
-	{
-		return Bridge\Bridge::getInstance();
-	}
+    function bridge()
+    {
+        return Bridge\Bridge::getInstance();
+    }
+}
+
+if (! function_exists('bridge_assets')) {
+    function bridge_assets()
+    {
+        return Bridge\Assets::getInstance();
+    }
 }

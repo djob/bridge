@@ -8,7 +8,7 @@
 
 namespace Bridge\Libraries;
 
-
-interface LibraryInterface {
-
+interface LibraryInterface
+{
+    public function register();
 }

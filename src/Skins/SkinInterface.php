@@ -11,4 +11,10 @@ namespace Bridge\Skins;
 
 interface SkinInterface
 {
+    /*
+     * Called when skin is plugged in
+     *
+     * @return void
+     */
+    public function register();
 }

@@ -8,13 +8,19 @@
 
 namespace Bridge\Libraries;
 
+use Bridge\Assets;
 
 class LibraryAbstract implements LibraryInterface
 {
-    protected $name = null;
+    protected $name    = null;
     protected $version = null;
-    protected $js  = [];
-    protected $css = [];
+    protected $js      = [];
+    protected $css     = [];
+
+    public function register()
+    {
+
+    }
 
     public function getName()
     {

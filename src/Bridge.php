@@ -7,32 +7,65 @@
  */
 namespace Bridge;
 
-use Bridge\Assets\Manager as AssetsManager;
-use Bridge\Assets\Adapter as AssetsAdapter;
+use Bridge\Skins\SkinInterface;
 use Bridge\Components\ComponentFactory;
-use Bridge\Skins\SkinAbstract;
-use Bridge\Skins\Bootstrap;
+use Bridge\Traits\Instance;
+use Bridge\Traits\Options;
+use ReflectionMethod;
 
-class Bridge {
+class Bridge
+{
+    use Instance;
+    use Options;
 
-	private static $instance = null;
-    private $skin = null;
-    private $assetManager = null;
-    private $libraryManager = null;
+    protected $skin      = null;
+    protected $libraries = null;
+    protected $options   = [
+        'debug'       => false, // optional
+     ];
 
-	public function __construct(SkinAbstract $skin = null)
-	{
+    public function __construct(SkinInterface $skin = null, array $options = [])
+    {
         // If skin is not defined, use Bootstrap as default
-        if (!$skin) {
-            $this->skin = new Bootstrap();
+        if (!$this->skin && !$skin) {
+            $skin = new \Bridge\Skins\Bootstrap();
         }
 
-        // Set asset manager
-        $this->assetManager = new AssetsManager(new AssetsAdapter());
-        $this->libraryManager = new Libraries();
-
+        if ($skin) {
+            $this->setSkin($skin);
+        }
+        $this->libraries = new Libraries($this);
+        $this->options['base_url'] = $this->baseUrl();
+        self::setInstance($this);
         $this->initLibraries();
-	}
+    }
+
+    protected function initLibraries()
+    {
+        $this->libraries->registerLibraries();
+    }
+
+    public function baseUrl()
+    {
+        $protocol = (isset($_server['HTTPS']) && $_SERVER['HTTPS'] && ($_SERVER['HTTPS'] != "off")) ? "https" : "http";
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
+
+    public static function debug()
+    {
+        return self::getInstance()->getOptions('debug');
+    }
+
+    public function getSkin()
+    {
+        return $this->skin;
+    }
+
+    public function setSkin(SkinInterface $skin)
+    {
+        $skin->register();
+        return $this->skin = $skin;
+    }
 
     public static function path($path = null)
     {
@@ -45,34 +78,23 @@ class Bridge {
         return $basePath;
     }
 
-    protected function initLibraries()
+    public static function __callStatic($name, $arguments)
     {
-        $this->libraryManager->registerLibraries();
+        $instance = self::getInstance();
+
+        //@TODO remove this part (method_exists), if existing method is called error will be dropped
+        if (method_exists($instance, $name)) {
+            $reflection = new ReflectionMethod($instance, $name);
+            return $reflection->invokeArgs($instance, $arguments);
+        } else {
+            return ComponentFactory::make($name, $arguments, $instance->getSkin());
+        }
     }
 
-    public function assets()
+    public function component($name)
     {
-        return $this->assetManager;
+        $arguments = func_get_args();
+        array_shift($arguments);
+        return ComponentFactory::make($name, $arguments, $this->getSkin());
     }
-
-	public static function getInstance()
-	{
-		if (! self::$instance) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
-
-	public static function __callStatic($name, $arguments)
-	{
-		return ComponentFactory::make($name, $arguments, self::getInstance()->skin);
-	}
-
-	public function component($name)
-	{
-		$arguments = func_get_args();
-		array_shift($arguments);
-		return ComponentFactory::make($name, $arguments, $this->skin);
-	}
 }

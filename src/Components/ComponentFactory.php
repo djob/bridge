@@ -17,7 +17,7 @@ class ComponentFactory {
         $name = ucfirst(strtolower($name));
 
         if ($skin) {
-            $class = 'Bridge\Skins\\' . $skin->getName() . '\\';
+            $class = 'Bridge\Skins\\' . ucfirst($skin->getName()) . '\\';
         } else {
             $class = 'Bridge\Components\\';
         }

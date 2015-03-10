@@ -15,5 +15,6 @@ class Bootstrap extends SkinAbstract
     protected $name            = 'bootstrap';
     protected $css             = ['//maxcdn.bootstrapcdn.com/bootstrap/{@version}/css/bootstrap.min.css'];
     protected $js              = ['//maxcdn.bootstrapcdn.com/bootstrap/{@version}/js/bootstrap.min.js'];
-    protected $jsDependencies  = ['jquery'];
+    protected $dependencies    = ['jquery' => '1.9.1'];
+
 }
