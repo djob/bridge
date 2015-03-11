@@ -11,20 +11,21 @@ use ReflectionClass;
 
 class Tag extends TagAbstract
 {
-	public function __construct($name, $content = null, $attributes = [])
-	{
+    public function __construct($name, $content = null, $attributes = [])
+    {
 
-		$this->name($name);
-		$this->content($content);
-		$this->attributes($attributes);
+        $this->name($name);
+        $this->content($content);
+        $this->attributes($attributes);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function __call($name, $arguments)
-	{
-		$instance = new ReflectionClass('Tag');
-		array_unshift($arguments, $name);
-		return $instance->newInstanceArgs($arguments);
-	}
+    public function __call($name, $arguments)
+    {
+        $instance = new ReflectionClass('Tag');
+        array_unshift($arguments, $name);
+
+        return $instance->newInstanceArgs($arguments);
+    }
 }

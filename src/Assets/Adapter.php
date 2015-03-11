@@ -20,11 +20,6 @@ class Adapter
     protected $adapter = null;
     protected $manager = null;
 
-    public function __construct()
-    {
-
-    }
-
     public function setManager(\Bridge\Assets\Manager $manager)
     {
         $this->manager = $manager;
@@ -58,13 +53,13 @@ class Adapter
         $filepath = $path . '\\' . $filename;
 
         if (Filesystem::fileExists($filepath)) {
-            return $filepath;
+            return $filename;
         }
 
         $collection = $this->getCollection($files);
         $this->write($collection, $type . '_' . $id, $filename, $path);
 
-        return $filepath;
+        return $filename;
     }
 
     public function getCss($files)

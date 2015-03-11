@@ -10,7 +10,7 @@ namespace Bridge\Traits;
 
 use Bridge\Assets as AssetManager;
 
-trait Assets
+trait AssetsTrait
 {
     protected function addAssets()
     {

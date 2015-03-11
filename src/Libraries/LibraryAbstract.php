@@ -12,10 +12,12 @@ use Bridge\Assets;
 
 class LibraryAbstract implements LibraryInterface
 {
-    protected $name    = null;
-    protected $version = null;
-    protected $js      = [];
-    protected $css     = [];
+    protected $name            = null;
+    protected $version         = null;
+    protected $js              = [];
+    protected $css             = [];
+    protected $cssDependencies = [];
+    protected $jsDependencies  = [];
 
     public function register()
     {

@@ -23,7 +23,7 @@ abstract class TagAbstract
     const TAG_LIST_ITEM     = 'li';
     const TAG_LIST_DESC     = 'dl';
     const TAG_LIST_DESC_KEY = 'dt';
-    const TAG_LIST_DESC_VAL = 'dt';
+    const TAG_LIST_DESC_VAL = 'dd';
     // Interaction tags constants
     const TAG_BUTTON = 'button';
 
@@ -161,7 +161,7 @@ abstract class TagAbstract
         return $this->smartGetSet('name', $name);
     }
 
-    public function contentToArray()
+    public function normalizeContent()
     {
         if (empty($this->content)) {
             return $this->content = [];
@@ -181,7 +181,7 @@ abstract class TagAbstract
      */
     public function appendContent($content)
     {
-        $this->contentToArray();
+        $this->normalizeContent();
 
         if (is_array($content)) {
             if (isset($content['tag'])) {
@@ -210,26 +210,38 @@ abstract class TagAbstract
         return $this->getBuilder()->build($this);
     }
 
+    public function contentToArray($content)
+    {
+        if ($content instanceof TagAbstract) {
+            $content = $content->toArray();
+        }
+
+        if (is_array($content)) {
+            if (isset($content['content'])) {
+                $content['content'] = $this->contentToArray($content['content']);
+            } else {
+                foreach ($content as &$child) {
+                    $child = $this->contentToArray($child);
+                }
+            }
+        }
+
+
+        return $content;
+    }
+
     /**
-     * Alias of self::render()
+     * Output Html Tag\Abstract object as html
      *
-     * @return string
+     * @return array
      * */
     public function toArray()
     {
         $array = [
             'tag'        => $this->name(),
             'attributes' => $this->attributes(),
-            'content'    => $this->content()
+            'content'    => $this->contentToArray($this->content())
         ];
-
-        if (is_array($array['content'])) {
-            foreach ($array['content'] as &$child) {
-                if ($child instanceof TagAbstract) {
-                    $child = $child->toArray();
-                }
-            }
-        }
 
         return $array;
     }

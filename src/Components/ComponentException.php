@@ -10,6 +10,7 @@ namespace Bridge\Components;
 
 use Exception;
 
-class ComponentException extends Exception{
+class ComponentException extends Exception
+{
 
 }

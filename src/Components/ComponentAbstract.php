@@ -7,25 +7,25 @@
  */
 namespace Bridge\Components;
 
-use ReflectionMethod;
 use Bridge\Html\TagAbstract;
+use Bridge\Traits\ReflectionMethodTrait;
 
 abstract class ComponentAbstract implements ComponentInterface
 {
+    use ReflectionMethodTrait;
+    protected $reflectionObject = null;
     /**
      * @var \Bridge\Html\TagAbstract
      */
-	protected $element;
+    protected $element;
     // Default attributes
     protected $attributes = [];
 
-	public function __construct()
-	{
-        $reflection = new ReflectionMethod($this, 'init');
-        $reflection->invokeArgs($this, func_get_args());
-
+    public function __construct()
+    {
+        $this->reflectionMethodCall($this, 'init', func_get_args());
         $this->element->attributes($this->attributes);
-	}
+    }
 
     public function id($id = null)
     {
@@ -55,8 +55,9 @@ abstract class ComponentAbstract implements ComponentInterface
         $this->element->removeAttribute('class', $class);
     }
 
-    protected function beforeRender()
+    protected function beforeRender(TagAbstract $element)
     {
+        return $element;
     }
 
     protected function afterRender($html)
@@ -65,22 +66,21 @@ abstract class ComponentAbstract implements ComponentInterface
     }
 
     public function render()
-	{
-		if ($this->element instanceof TagAbstract) {
-            $this->beforeRender();
+    {
+        if ($this->element instanceof TagAbstract) {
+            $this->element = $this->beforeRender($this->element);
 
-			$html = $this->element->render();
+            $html = $this->element->render();
             $html = $this->afterRender($html);
 
             return $html;
-		}
+        }
 
         throw new ComponentException('Cannot render component. Element is not instance of \Bridge\Html\TagAbstract');
-	}
+    }
 
-	public function __toString()
-	{
-		return $this->render();
-	}
-
+    public function __toString()
+    {
+        return $this->render();
+    }
 }

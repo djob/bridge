@@ -8,27 +8,23 @@
 
 namespace Bridge\Assets;
 
+use Bridge\Config;
 use Bridge\Utils\Filesystem;
-use Bridge\Traits\Options;
 use RuntimeException;
 use InvalidArgumentException;
 
 class Manager
 {
-    use Options;
-
     protected $adapter           = null;
     protected $cssFiles          = [];
     protected $jsFiles           = [];
     protected $jsSources         = [];
     protected $cssSources        = [];
-    protected $options           = [];
     public $allowedExtensions    = ['css', 'js'];
 
-    public function __construct($adapter, array $options = [])
+    public function __construct($adapter)
     {
         $this->setAdapter($adapter);
-        $this->setOptions($options);
         $this->cdn = new Cdn($this);
     }
 
@@ -55,12 +51,12 @@ class Manager
 
     public function getAssetsPath($append = null)
     {
-        if (isset($this->options['path']) && !empty($path = $this->options['path'])) {
+        if ($path = Config::get('assets_path')) {
             if (Filesystem::dirExists($path)) {
                 return rtrim($path, '\/') . (($append !== null) ? '\\' . $append : '');
             } else {
                 throw new RuntimeException(
-                    sprintf("Assets path is defined as %s, but does not exists or not writable!", $path)
+                    sprintf("Assets path is defined as %s, but not exists or not writable!", $path)
                 );
             }
         }
@@ -139,14 +135,22 @@ class Manager
         }
     }
 
-    public function cssPath()
+    public function css($baseUrl = null)
     {
-        return $this->dumpCss();
+        if ($file = $this->dumpCss()) {
+            return $baseUrl ? $baseUrl . '\\' . $file : $file;
+        }
+
+        throw new RuntimeException('Unable to resolve css path');
     }
 
-    public function jsPath()
+    public function js($baseUrl = null)
     {
-        return $this->dumpJs();
+        if ($file = $this->dumpJs()) {
+            return $baseUrl ? $baseUrl . '\\' . $file : $file;
+        }
+
+        throw new RuntimeException('Unable to resolve js path');
     }
 
 }

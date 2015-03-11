@@ -8,7 +8,7 @@
 
 namespace Bridge\Traits;
 
-trait Instance
+trait SingeltonTrait
 {
     public static $instance = null;
 

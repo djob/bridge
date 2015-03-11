@@ -9,11 +9,11 @@
 namespace Bridge\Skins;
 
 use Bridge\Assets;
-use Bridge\Traits\Assets as AssetsHandler;
+use Bridge\Traits\AssetsTrait;
 
 abstract class SkinAbstract implements SkinInterface
 {
-    use AssetsHandler;
+    use AssetsTrait;
 
     protected $version      = null;
     protected $name         = null;

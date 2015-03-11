@@ -9,42 +9,29 @@ namespace Bridge;
 
 use Bridge\Assets\Manager;
 use Bridge\Assets\Adapter;
-use Bridge\Traits\Instance;
-use Bridge\Traits\Options;
-use ReflectionMethod;
+use Bridge\Traits\SingeltonTrait;
+use Bridge\Traits\ReflectionMethodTrait;
 
 class Assets
 {
-    use Instance;
-    use Options;
+    use SingeltonTrait;
+    use ReflectionMethodTrait;
 
+    protected $reflectionObject = null;
     protected $manager   = null;
     protected $libraries = null;
-    protected $options   = [
-        'path' => null // if empty, syspath will be used
-    ];
 
-    public function __construct(array $options = [])
+    public function __construct()
     {
-        $this->manager   = new Manager(new Adapter(), $this->getOption());
-
+        $this->manager   = new Manager(new Adapter());
+        $this->reflectionObject = $this->manager;
         self::setInstance($this);
-    }
-
-    public function call($name, $arguments)
-    {
-        $reflection = new ReflectionMethod($this->manager, $name);
-        return $reflection->invokeArgs($this->manager, $arguments);
+        return $this;
     }
 
     public static function __callStatic($name, $arguments)
     {
-        return self::getInstance()->call($name, $arguments);
+        $instance = self::getInstance();
+        return $instance->reflectionMethodCall($instance->manager, $name, $arguments);
     }
-
-    public function __call($name, $arguments)
-    {
-        return $this->call($name, $arguments);
-    }
-
 }

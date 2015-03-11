@@ -11,9 +11,10 @@ namespace Bridge\Components;
 use Bridge\Skins\SkinAbstract;
 use ReflectionClass;
 
-class ComponentFactory {
-	public static function make($name, $arguments, SkinAbstract $skin = null)
-	{
+class ComponentFactory
+{
+    public static function make($name, $arguments, SkinAbstract $skin = null)
+    {
         $name = ucfirst(strtolower($name));
 
         if ($skin) {
@@ -24,11 +25,12 @@ class ComponentFactory {
 
         $class .= $name;
 
-		if (class_exists($class)) {
-			$instance = new ReflectionClass($class);
-			return $instance->newInstanceArgs($arguments);
-		}
+        if (class_exists($class)) {
+            $instance = new ReflectionClass($class);
 
-		throw new ComponentException('Called invalid component:' . $class);
-	}
+            return $instance->newInstanceArgs($arguments);
+        }
+
+        throw new ComponentException('Called invalid component:' . $class);
+    }
 }
