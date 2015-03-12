@@ -18,12 +18,14 @@ class Dl extends Ul
 
         foreach ($data as $param => $value) {
             $items[] = [
-                'tag' => self::TAG_LIST_DESC_KEY,
-                'content' => $param
+                'tag'        => self::TAG_LIST_DESC_KEY,
+                'content'    => $param,
+                'attributes' => $this->childAttributes
             ];
             $items[] = [
-                'tag' => self::TAG_LIST_DESC_VAL,
-                'content' => $value
+                'tag'        => self::TAG_LIST_DESC_VAL,
+                'content'    => $value,
+                'attributes' => $this->childAttributes
             ];
         }
 

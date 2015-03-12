@@ -8,9 +8,14 @@
 
 namespace Bridge\Skins;
 
-
 class Bootstrap extends SkinAbstract
 {
+    const CLASS_ACTIVE  = 'active';
+    const CLASS_SUCCESS = 'success';
+    const CLASS_INFO    = 'info';
+    const CLASS_WARNING = 'warning';
+    const CLASS_DANGER  = 'danger';
+
     protected $version         = '3.3.2';
     protected $name            = 'bootstrap';
     protected $css             = ['//maxcdn.bootstrapcdn.com/bootstrap/{@version}/css/bootstrap.min.css'];

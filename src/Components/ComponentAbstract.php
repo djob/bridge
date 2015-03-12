@@ -9,10 +9,13 @@ namespace Bridge\Components;
 
 use Bridge\Html\TagAbstract;
 use Bridge\Traits\ReflectionMethodTrait;
+use Bridge\Traits\SmartSetGetTrait;
 
 abstract class ComponentAbstract implements ComponentInterface
 {
     use ReflectionMethodTrait;
+    use SmartSetGetTrait;
+
     protected $reflectionObject = null;
     /**
      * @var \Bridge\Html\TagAbstract
@@ -25,8 +28,17 @@ abstract class ComponentAbstract implements ComponentInterface
     {
         $this->reflectionMethodCall($this, 'init', func_get_args());
         $this->element->attributes($this->attributes);
+        $this->setReflectionObject($this->element);
     }
 
+    public function element(TagAbstract $element = null)
+    {
+        if ($element) {
+            $this->setReflectionObject($element);
+        }
+
+        return $this->smartGetSet('element', $element);
+    }
     public function id($id = null)
     {
         if ($id) {

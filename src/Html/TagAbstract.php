@@ -7,8 +7,12 @@
  */
 namespace Bridge\Html;
 
+use Bridge\Traits\SmartSetGetTrait;
+
 abstract class TagAbstract
 {
+    use SmartSetGetTrait;
+
     // Table tags constants
     const TAG_TABLE = 'table';
     const TAG_TBODY = 'tbody';
@@ -26,21 +30,22 @@ abstract class TagAbstract
     const TAG_LIST_DESC_VAL = 'dd';
     // Interaction tags constants
     const TAG_BUTTON = 'button';
+    // Form tags
+    const TAG_FORM     = 'form';
+    const TAG_INPUT    = 'input';
+    const TAG_SELECT   = 'select';
+    const TAG_OPTION   = 'option';
+    const TAG_OPTGROUP = 'optgroup';
+    const TAG_TEXTAREA = 'textarea';
+    const TAG_LABEL    = 'label';
+    const TAG_FIELDSET = 'fieldset';
+    const TAG_LEGEND   = 'legend';
 
     protected $content    = null;
     protected $name       = null;
     protected $attributes = [];
 
     protected $builder = null;
-
-    final protected function smartGetSet($attribute, $value)
-    {
-        if (!empty($value)) {
-            $this->{$attribute} = $value;
-        }
-
-        return $this->{$attribute};
-    }
 
     public function getBuilder()
     {
@@ -54,21 +59,25 @@ abstract class TagAbstract
     protected function normalize($tag, $element, array $attributes = [])
     {
         if (is_array($element)) {
-            if (!isset($element['content'])) {
-                $element = [
-                    'tag'        => $tag,
-                    'content'    => $element,
-                    'attributes' => $attributes
-                ];
-            }
+            $element = [
+                'tag'        => $tag,
+                'content'    => isset($element['content']) ? $element['content'] : $element,
+                'attributes' => isset($element['attributes']) ? $element['attributes'] : $attributes
+            ];
 
             return $element;
-        } else {
+        } elseif ($element instanceof TagAbstract) {
+            return $element->toArray();
+        } elseif (is_scalar($element)) {
             return [
                 'tag'        => $tag,
                 'content'    => $element,
                 'attributes' => $attributes
             ];
+        } else {
+            throw new \InvalidArgumentException(
+                sprintf("Unable to normalize tag. Invalid element type provided %s.", gettype($element))
+            );
         }
     }
 
@@ -213,7 +222,7 @@ abstract class TagAbstract
     public function contentToArray($content)
     {
         if ($content instanceof TagAbstract) {
-            $content = $content->toArray();
+            return $content->toArray();
         }
 
         if (is_array($content)) {

@@ -10,13 +10,15 @@ namespace Bridge\Html;
 
 class Ul extends TagAbstract
 {
-    protected $name = self::TAG_LIST;
-    protected $childTag = self::TAG_LIST_ITEM;
+    protected $name            = self::TAG_LIST;
+    protected $childTag        = self::TAG_LIST_ITEM;
+    protected $childAttributes = [];
 
     public function __construct(array $list = [], $attributes = [])
     {
         $this->items($list);
         $this->attributes($attributes);
+
         return $this;
     }
 
@@ -39,10 +41,10 @@ class Ul extends TagAbstract
                 // Check various child cases
                 if (is_scalar($child)) {
                     // If child is scalar set it as simple li tag with string content
-                    $child = $this->normalize($this->childTag, $child);
+                    $child = $this->normalize($this->childTag, $child, $this->childAttributes);
                 } elseif (is_array($child)) {
                     // if child is array means that list is nested
-                    $child = $this->normalize($this->childTag, $child);
+                    $child        = $this->normalize($this->childTag, $child, $this->childAttributes);
                     $childContent = $child['content'];
                     // If index is string set this as first content in nested list
                     // index could be string or instance of html element

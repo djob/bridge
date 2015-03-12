@@ -7,12 +7,16 @@
  */
 namespace Bridge\Html;
 
+use Bridge\Traits\SmartSetGetTrait;
+
 class Table extends TagAbstract
 {
+    use SmartSetGetTrait;
+
     protected $name   = self::TAG_TABLE;
-    protected $body   = [];
-    protected $header = [];
-    protected $footer = [];
+    protected $trAttr = [];
+    protected $tdAttr = [];
+    protected $thAttr = [];
 
     public function __construct(array $body = [], array $header = [], array $footer = [], array $attributes = [])
     {
@@ -20,6 +24,23 @@ class Table extends TagAbstract
         $this->header($header);
         $this->footer($footer);
         $this->attributes($attributes);
+
+        return $this;
+    }
+
+    public function trAttr(array $attributes = [])
+    {
+        return $this->smartGetSet('trAttr', $attributes);
+    }
+
+    public function tdAttr(array $attributes = [])
+    {
+        return $this->smartGetSet('tdAttr', $attributes);
+    }
+
+    public function thAttr(array $attributes = [])
+    {
+        return $this->smartGetSet('thAttr', $attributes);
     }
 
     public function header(array $header = [])
@@ -28,7 +49,7 @@ class Table extends TagAbstract
             $tr = $this->normalize(self::TAG_TR, $header);
 
             foreach ($tr['content'] as $key => $td) {
-                $tr['content'][$key] = $this->normalize(self::TAG_TH, $td);
+                $tr['content'][$key] = $this->normalize(self::TAG_TH, $td, $this->thAttr);
             }
 
             $header = [
@@ -36,11 +57,9 @@ class Table extends TagAbstract
                 'content' => $tr
             ];
             $this->appendContent($header);
-
-            $this->header = $header;
         }
 
-        return $this->header;
+        return $this;
     }
 
     public function footer(array $footer = [])
@@ -49,16 +68,15 @@ class Table extends TagAbstract
             $tr = $this->normalize(self::TAG_TR, $footer);
 
             foreach ($tr['content'] as $key => $td) {
-                $tr['content'][$key] = $this->normalize(self::TAG_TD, $td);
+                $tr['content'][$key] = $this->normalize(self::TAG_TD, $td, $this->tdAttr);
             }
 
-            $footer = $this->normalize(self::TAG_TFOOT, $tr);
+            $footer = $this->normalize(self::TAG_TFOOT, $tr, $this->trAttr);
 
             $this->appendContent($footer);
-            $this->footer = $footer;
         }
 
-        return $this->footer;
+        return $this;
     }
 
 
@@ -76,9 +94,9 @@ class Table extends TagAbstract
             foreach ($body as &$tr) {
                 // Check if item of array is array;
                 if (is_array($tr)) {
-                    $tr = $this->normalize(self::TAG_TR, $tr);
+                    $tr = $this->normalize(self::TAG_TR, $tr, $this->trAttr);
                     foreach ((array)$tr['content'] as $key => &$td) {
-                        $tr['content'][$key] = $this->normalize(self::TAG_TD, $td);
+                        $tr['content'][$key] = $this->normalize(self::TAG_TD, $td, $this->tdAttr);
                     }
                 } else {
                     throw new TagException(
@@ -88,10 +106,8 @@ class Table extends TagAbstract
             }
             $body = $this->normalize(self::TAG_TBODY, $body);
             $this->appendContent($body);
-
-            $this->body = $body;
         }
 
-        return $this->body;
+        return $this;
     }
 }

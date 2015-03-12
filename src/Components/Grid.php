@@ -14,6 +14,8 @@ class Grid extends ComponentAbstract
 {
     public function init($body = [], $header = [], $footer = [], $attributes = [])
     {
-        $this->element = new Table($body, $header, $footer, $attributes);
+        $this->element(new Table($body, $header, $footer, $attributes));
+
+        return $this;
     }
 }
