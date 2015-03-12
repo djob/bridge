@@ -8,7 +8,9 @@
 
 namespace Bridge\Html\Form;
 
-class Select
+use Bridge\Html\TagAbstract;
+
+class Select extends TagAbstract
 {
 
 }

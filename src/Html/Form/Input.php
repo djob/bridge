@@ -12,7 +12,7 @@ use Bridge\Html\TagAbstract;
 
 class Input extends TagAbstract
 {
-    protected $name       = self::TAG_TABLE;
+    protected $name       = self::TAG_INPUT;
     protected $attributes = [
         'type' => null,
         'name' => null

@@ -8,7 +8,7 @@
 
 namespace Bridge\Html\Form;
 
-class Textarea
+class Textarea extends Input
 {
 
 }

@@ -8,7 +8,9 @@
 
 namespace Bridge\Html\Form;
 
-class Fieldset
+use Bridge\Html\TagAbstract;
+
+class Fieldset extends TagAbstract
 {
 
 }
