@@ -8,29 +8,30 @@
 
 namespace Bridge\Components;
 
-use Bridge\Html\Ul;
-use Bridge\Html\Dl;
-use Bridge\Html\Ol;
-
 class Listing extends ComponentAbstract
 {
     const UL = 'Ul';
     const DL = 'Dl';
     const OL = 'Ol';
 
-    protected $items = [];
+    protected $items           = [];
+    protected $childAttributes = [];
 
     public function init(array $items, array $attributes = [], $type = self::UL)
     {
-        $this->element = $this->make($type, $items, $attributes);
+        $this->make($type, [], $attributes, $this->childAttributes);
+        $this->element()->items($items);
 
         return $this;
     }
 
-    private function make($type, array $items, array $attributes = [])
+    protected function make($type, array $items, array $attributes = [], array $childAttributes = [])
     {
-        if (class_exists($type)) {
-            $this->element = new $type($items, $attributes);
+        $class = 'Bridge\Html\\' . $type;
+
+        if (class_exists($class)) {
+            $this->element(new $class($items, $attributes, $childAttributes));
+
             return $this;
         }
 
@@ -39,22 +40,30 @@ class Listing extends ComponentAbstract
         );
     }
 
-    public function ordered(array $items, array $attributes = [])
+    public function ordered(array $items = [], array $attributes = [])
     {
-        $this->element = $this->make(self::OL, $items, $attributes);
+        $this->switchType(self::OL, $items, $attributes);
+    }
+
+    protected function switchType($type, array $items, array $attributes)
+    {
+        if ($items) {
+            $this->element = $this->make($type, $items, $attributes);
+        } else {
+            $this->element->name($type);
+        }
+
         return $this;
     }
 
     public function description(array $items, array $attributes = [])
     {
-        $this->element = $this->make(self::DL, $items, $attributes);
-        return $this;
+        $this->switchType(self::DL, $items, $attributes);
     }
 
     public function normal(array $items, array $attributes = [])
     {
-        $this->element = $this->make(self::UL, $items, $attributes);
-        return $this;
+        $this->switchType(self::UL, $items, $attributes);
     }
 
 }

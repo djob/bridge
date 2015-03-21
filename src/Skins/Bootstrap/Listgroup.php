@@ -8,14 +8,18 @@
 
 namespace Bridge\Skins\Bootstrap;
 
-use Bridge\Components\ComponentAbstract;
-use Bridge\Html\Ul;
+use Bridge\Components\Listing;
 
-class Listgroup extends ComponentAbstract
+class Listgroup extends Listing
 {
+    const CLASS_LIST_GROUP      = 'list-group';
+    const CLASS_LIST_GROUP_ITEM = 'list-group-item';
 
-    public function init(array $items)
-    {
-        $this->element(new Ul($items));
-    }
+    protected $attributes = [
+        'class' => [self::CLASS_LIST_GROUP]
+    ];
+
+    protected $childAttributes = [
+        'class' => [self::CLASS_LIST_GROUP_ITEM]
+    ];
 }

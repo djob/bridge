@@ -12,12 +12,13 @@ class Ul extends TagAbstract
 {
     protected $name            = self::TAG_LIST;
     protected $childTag        = self::TAG_LIST_ITEM;
-    protected $childAttributes = [];
+    protected $childAttributes    = [];
 
-    public function __construct(array $list = [], $attributes = [])
+    public function __construct(array $list = [], array $attributes = [], array $childAttributes = [])
     {
+        $this->childAttributes = $childAttributes;
+        $this->appendAttributes($attributes);
         $this->items($list);
-        $this->attributes($attributes);
 
         return $this;
     }
@@ -54,7 +55,7 @@ class Ul extends TagAbstract
                         $child['content'] = [$index->toArray()];
                     }
                     // Set nested list recursive
-                    $child['content'][] = new self($childContent);
+                    $child['content'][] = new self($childContent, $this->attributes(), $this->childAttributes);
                 } elseif ($child instanceof TagAbstract) {
                     // Child is instance of html element, set element as array
                     $child = $child->toArray();

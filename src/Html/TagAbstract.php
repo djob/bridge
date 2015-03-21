@@ -47,6 +47,7 @@ abstract class TagAbstract
 
     protected $builder = null;
 
+    // @TODO - get builder as singelton
     public function getBuilder()
     {
         if (!$this->builder) {
@@ -138,8 +139,56 @@ abstract class TagAbstract
         $this->checkAttribute($attribute);
 
         if (!in_array($value, $this->attributes[$attribute])) {
-            $this->attributes[$attribute][] = $value;
+            if (is_scalar($value)) {
+                $this->attributes[$attribute][] = $value;
+            } elseif (is_array($value)) {
+                foreach ($value as $val) {
+                    $this->attributes[$attribute][] = $val;
+                }
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf('Unable to append to attribute %s. Provided value invalid type!', $attribute)
+                );
+            }
+
         }
+    }
+
+    public function prependAttribute($attribute, $value)
+    {
+        $this->checkAttribute($attribute);
+
+        if (!in_array($value, $this->attributes[$attribute])) {
+            if (is_scalar($value)) {
+                array_unshift($this->attributes[$attribute], $value);
+            } elseif (is_array($value)) {
+                foreach ($value as $val) {
+                    array_unshift($this->attributes[$attribute], $val);
+                }
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf('Unable to prepend to attribute %s. Provided value invalid type!', $attribute)
+                );
+            }
+        }
+    }
+
+    public function appendAttributes(array $attributes)
+    {
+        foreach ($attributes as $attribute => $value) {
+            $this->appendAttribute($attribute, $value);
+        }
+
+        return $this->attributes();
+    }
+
+    public function prependAttributes(array $attributes)
+    {
+        foreach ($attributes as $attribute => $value) {
+            $this->prependAttribute($attribute, $value);
+        }
+
+        return $this->attributes();
     }
 
     public function setAttribute($attribute, $value)

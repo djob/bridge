@@ -16,7 +16,7 @@ class Bridge
 {
     use SingeltonTrait;
 
-    protected $skin      = null;
+    protected $skin = null;
     protected $libraries = null;
 
     public function __construct(SkinInterface $skin = null)
@@ -40,17 +40,6 @@ class Bridge
         $this->libraries->registerLibraries();
     }
 
-    public function getSkin()
-    {
-        return $this->skin;
-    }
-
-    public function setSkin(SkinInterface $skin)
-    {
-        $skin->register();
-        return $this->skin = $skin;
-    }
-
     public static function path($path = null)
     {
         $basePath = dirname(__FILE__);
@@ -69,6 +58,7 @@ class Bridge
         //@TODO remove this part (method_exists), if existing method is called error will be dropped
         if (method_exists($instance, $name)) {
             $reflection = new ReflectionMethod($instance, $name);
+
             return $reflection->invokeArgs($instance, $arguments);
         } else {
             return ComponentFactory::make($name, $arguments, $instance->getSkin());
@@ -77,8 +67,18 @@ class Bridge
 
     public function component($name)
     {
-        $arguments = func_get_args();
-        array_shift($arguments);
-        return ComponentFactory::make($name, $arguments, $this->getSkin());
+        return ComponentFactory::make($name, array_shift(func_get_args()), $this->getSkin());
+    }
+
+    public function getSkin()
+    {
+        return $this->skin;
+    }
+
+    public function setSkin(SkinInterface $skin)
+    {
+        $skin->register();
+
+        return $this->skin = $skin;
     }
 }

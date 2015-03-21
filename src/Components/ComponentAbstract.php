@@ -16,29 +16,35 @@ abstract class ComponentAbstract implements ComponentInterface
     use ReflectionMethodTrait;
     use SmartSetGetTrait;
 
-    protected $reflectionObject = null;
+    protected $reflectionObject = 'element';
     /**
      * @var \Bridge\Html\TagAbstract
      */
-    protected $element;
+    protected $element = null;
     // Default attributes
     protected $attributes = [];
 
     public function __construct()
     {
+        // Call init in component main class if exists
+        // Element must be always created in init method
         $this->reflectionMethodCall($this, 'init', func_get_args());
-        $this->element->attributes($this->attributes);
-        $this->setReflectionObject($this->element);
+
+        if ($this->element) {
+            $this->element->prependAttributes($this->attributes);
+
+        } else {
+            throw new \RuntimeException("Component element doesn't exists. Element instance must be created");
+        }
+
+        return $this;
     }
 
     public function element(TagAbstract $element = null)
     {
-        if ($element) {
-            $this->setReflectionObject($element);
-        }
-
         return $this->smartGetSet('element', $element);
     }
+
     public function id($id = null)
     {
         if ($id) {
