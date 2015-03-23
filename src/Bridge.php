@@ -67,7 +67,10 @@ class Bridge
 
     public function component($name)
     {
-        return ComponentFactory::make($name, array_shift(func_get_args()), $this->getSkin());
+        $arguments = func_get_args();
+        array_shift($arguments);
+
+        return ComponentFactory::make($name, $arguments, $this->getSkin());
     }
 
     public function getSkin()

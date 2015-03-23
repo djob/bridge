@@ -19,7 +19,7 @@ class Listing extends ComponentAbstract
 
     public function init(array $items, array $attributes = [], $type = self::UL)
     {
-        $this->make($type, [], $attributes, $this->childAttributes);
+        $this->make($type, [], array_merge((array)$this->attributes, $attributes), $this->childAttributes);
         $this->element()->items($items);
 
         return $this;
